@@ -1,0 +1,23 @@
+# Scheem
+start =	
+    expression
+
+expression =
+    singleatom:atom { return singleatom; }
+  / whitespace "(" exprlist:expressions ")" whitespace { return exprlist; }
+
+expressions =
+    firstexpression:expression spacedexpressions:spacedexpression* { return [firstexpression].concat(spacedexpressions); }
+
+spacedexpression =
+    whitespace singleexpression:expression { return singleexpression; }
+
+validchar
+    = [0-9a-zA-Z_?!+-=@#$%^&*/.]
+
+whitespace =
+    [ \t\n]*
+
+atom =
+    chars:validchar+
+        { return chars.join(""); }
