@@ -1,4 +1,4 @@
-# Scheem
+// Scheem
 start =	
     expression
 
