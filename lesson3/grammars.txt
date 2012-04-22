@@ -1,0 +1,67 @@
+
+
+
+# list of words:
+start =
+    wordlist
+
+wordlist =
+    singleword:word words:spacedword* { return [ singleword].concat(words); }
+
+word =
+    letters:[a-z]+
+        { return letters.join(""); }
+
+spacedword =
+	" " myword:word
+    	{ return myword; }
+
+# scheem
+start =
+    expression
+
+expression =
+    atom
+  / "(" exprlist:expressions ")" { return exprlist; }
+
+expressions =
+    firstexpression:expression spacedexpressions:spacedexpression* { return [firstexpression].concat(spacedexpressions); }
+
+spacedexpression =
+    " " singleexpression:expression { return singleexpression; }
+
+validchar
+    = [0-9a-zA-Z_?!+-=@#$%^&*/.]
+
+atom =
+    chars:validchar+
+        { return chars.join(""); }
+
+# comma
+start =
+    comma
+
+
+comma =
+    left:additive "," right:comma
+        { return {tag: ",", left:left, right:right}; }
+  / additive
+
+additive =
+    left:multiplicative "+" right:additive
+        { return {tag: "+", left:left, right:right}; }
+  / multiplicative
+
+multiplicative =
+    left:primary "*" right:multiplicative
+        { return {tag: "*", left:left, right:right}; }
+  / primary
+
+primary =
+    integer
+  / "(" additive:comma ")"
+      { return comma; }
+
+integer =
+    digits:[0-9]+
+        { return parseInt(digits.join(""), 10); }
