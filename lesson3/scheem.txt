@@ -3,8 +3,12 @@ start =
     expression
 
 expression =
-    singleatom:atom { return singleatom; }
+    quotedexpression
+  / singleatom:atom { return singleatom; }
   / whitespace "(" exprlist:expressions ")" whitespace { return exprlist; }
+
+quotedexpression = 
+    "'" singleexpression:expression { return ["quote",singleexpression]; }
 
 expressions =
     firstexpression:expression spacedexpressions:spacedexpression* { return [firstexpression].concat(spacedexpressions); }
